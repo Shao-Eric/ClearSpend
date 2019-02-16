@@ -6,7 +6,7 @@ import HospitalScreen from '../screens/HospitalScreen';
 
 export default AppNavigator = createAppContainer(createStackNavigator({
   HomeScreen: {
-    screen: HomeScreen
+    screen: SearchScreen
   },
   CategoryScreen: {
     screen: CategoryScreen

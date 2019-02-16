@@ -21,6 +21,7 @@ export default class HomeScreen extends React.Component {
   state = { "hospitals": [] }
 
   componentDidMount() {
+    console.disableYellowBox = true;
     firebase.database().ref("hospitals").on('value', (snapshot) => {
       let hospitalsObj = snapshot.val()
       let hospitalsList = Object.keys(hospitalsObj).map(key => {
@@ -118,10 +119,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-
-
-
-
   stayElevated: {
     margin: 10,
     backgroundColor: 'white'
