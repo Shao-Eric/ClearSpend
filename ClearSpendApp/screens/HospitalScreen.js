@@ -23,8 +23,8 @@ export default class HospitalScreen extends React.Component {
                     icon="arrow-back"
                     onIconPress={()=> this.props.navigation.goBack()}
                 />
-                <ElevatedView elevation={3} style={{ marginHorizontal: 20, borderRadius: 12, top: -16 }}>
-                    <Text style={{ textAlign: 'center', padding: 12, bottom: -2, fontSize: 16 }}>
+                <ElevatedView elevation={3} style={{ marginHorizontal: 20, borderRadius: 12, top: -16, backgroundColor: 'skyblue' }}>
+                    <Text style={{ textAlign: 'center', padding: 12, bottom: -2, fontSize: 16, color: 'white' }}>
                         {this.props.navigation.state.params.name}
                     </Text>
                 </ElevatedView>

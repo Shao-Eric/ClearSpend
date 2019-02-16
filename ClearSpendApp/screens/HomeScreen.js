@@ -41,11 +41,17 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Searchbar
-          style={{ marginTop: STATUSBAR_HEIGHT + 12, margin: 12 }}
-          placeholder="Search Clear Spend..."
-        />
+        <TouchableOpacity
+          onPress={()=>this.props.navigation.navigate('SearchScreen')}
+        >
+          <View pointerEvents="none">
 
+            <Searchbar
+              style={{ marginTop: STATUSBAR_HEIGHT + 12, margin: 12 }}
+              placeholder="Search Clear Spend..."
+            />
+          </View>
+        </TouchableOpacity>
         <FlatList
           data={this.state.hospitals}
           renderItem={({ item }) =>
@@ -55,9 +61,9 @@ export default class HomeScreen extends React.Component {
             >
               <TouchableOpacity
                 style={{ flex: 1 }}
-                onPress={() => 
-                  this.props.navigation.navigate('HospitalScreen', { 
-                    hospital: item.id, 
+                onPress={() =>
+                  this.props.navigation.navigate('HospitalScreen', {
+                    hospital: item.id,
                     name: item.name,
                     categories: ["category1", "category2", "category3", "category4"]
                   })
