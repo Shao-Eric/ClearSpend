@@ -2,7 +2,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import SearchScreen from '../screens/SearchScreen';
-import CartScreen from '../screens/CategoryScreen';
+import HospitalScreen from '../screens/HospitalScreen';
 
 export default AppNavigator = createAppContainer(createStackNavigator({
   HomeScreen: {
@@ -14,8 +14,8 @@ export default AppNavigator = createAppContainer(createStackNavigator({
   SearchScreen: {
     screen: SearchScreen
   },
-  CartScreen: {
-    screen: CartScreen
+  HospitalScreen: {
+    screen: HospitalScreen
   }
 }, {
     initialRouteName: 'HomeScreen',
