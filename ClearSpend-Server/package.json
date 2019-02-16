@@ -4,13 +4,15 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "NODE_ENV=production node server.js"
   },
-  "author": "",
+  "author": "Mint Traktor",
   "license": "ISC",
   "dependencies": {
+    "algoliasearch": "^3.32.0",
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "next": "^8.0.1",
     "react": "^16.8.2",
