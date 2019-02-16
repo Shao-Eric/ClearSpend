@@ -7,7 +7,11 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const bodyParser = require('body-parser')
 
-const client = algoliasearch(process.env.algoliaAppId, process.env.algoliaAPIKey, {
+// const client = algoliasearch(process.env.algoliaAppId, process.env.algoliaAPIKey, {
+//     timeout: 4000,
+// })
+
+const client = algoliasearch('SO8TXE2MTN', '62fc1008c3961e2e71427ba0d0853c6a', {
     timeout: 4000,
 })
 
@@ -45,6 +49,10 @@ app.prepare()
             index.search(queryObj).then(response => {
                 res.json(response.hits)
             })
+        })
+
+        server.get('/admin', (req, res) => {
+            app.render(req, res, '/admin')
         })
 
         server.get('*', (req, res) => {
