@@ -6,7 +6,7 @@ import CartScreen from '../screens/CategoryScreen';
 
 export default AppNavigator = createAppContainer(createStackNavigator({
   HomeScreen: {
-    screen: HomeScreen
+    screen: SearchScreen
   },
   CategoryScreen: {
     screen: CategoryScreen
