@@ -1,7 +1,6 @@
 import React from 'react';
-import { View } from 'react-native';
 import firebase from 'firebase';
-import AppNavigator from './navigation/AppNavigator.js'
+import AppNavigator from './navigation/AppNavigator'
 
 export default class App extends React.Component { 
 

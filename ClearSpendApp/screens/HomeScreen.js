@@ -15,58 +15,56 @@ import ElevatedView from 'react-native-elevated-view'
 
 export default class HomeScreen extends React.Component {
 
+  state = { "hospitals": [] }
 
-  state = {"hospitals": []}
-
-  componentDidMount(){
+  componentDidMount() {
     firebase.database().ref("hospitals").on('value', (snapshot) => {
-     let hospitalsObj = snapshot.val()
-     let hospitalsList = Object.keys(hospitalsObj).map(key => hospitalsObj[key])
-      this.setState({"hospitals": hospitalsList})
-   });
+      let hospitalsObj = snapshot.val()
+      let hospitalsList = Object.keys(hospitalsObj).map(key => hospitalsObj[key])
+      this.setState({ "hospitals": hospitalsList })
+    });
   }
 
   render() {
-    console.log(this.state.hospitals)
     return (
-    <View style={styles.container}>
-        <Searchbar 
-          style={{marginTop: STATUSBAR_HEIGHT, marginHorizontal: 8, marginBottom:30}}
+      <View style={styles.container}>
+        <Searchbar
+          style={{ marginTop: STATUSBAR_HEIGHT, marginHorizontal: 8, marginBottom: 30 }}
           placeholder="Search Clear Spend..."
         />
 
 
         <FlatList data={this.state.hospitals}
-          renderItem={({item}) => 
+          renderItem={({ item }) =>
             <ElevatedView
               elevation={3}
               style={styles.stayElevated}
-              >
-              <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}> 
-            <View  style={{flex: 1}}>
-                <Text>{item.name}</Text>
-                <Text>Stars Placeholder</Text>
-                <Text>{item.address}</Text>
+            >
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}>
+                <View style={{ flex: 1 }}>
+                  <Text>{item.name}</Text>
+                  <Text>Stars Placeholder</Text>
+                  <Text>{item.address}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text>Image placeholder</Text>
+                </View>
               </View>
-              <View  style={{flex:1}}>
-                <Text>Image placeholder</Text>
-              </View>
-              </View>
-          </ElevatedView>
-          
+            </ElevatedView>
+
           }
         />
-    </View>
+      </View>
     );
   }
 
- 
+
 }
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? Constants.statusBarHeight : StatusBar.currentHeight;
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
     backgroundColor: '#fff',
   },
@@ -74,7 +72,7 @@ const styles = StyleSheet.create({
 
 
 
-    stayElevated: {
+  stayElevated: {
     margin: 10,
     backgroundColor: 'white'
   },
