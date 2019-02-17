@@ -1,8 +1,9 @@
 import React from 'react';
 import firebase from 'firebase';
 import AppNavigator from './navigation/AppNavigator'
+import Cart from './context/CartContext'
 
-export default class App extends React.Component { 
+export default class App extends React.Component {
 
   componentWillMount() {
     var config = {
@@ -18,7 +19,9 @@ export default class App extends React.Component {
 
   render() {
     return (
-        <AppNavigator/>
+      <Cart>
+        <AppNavigator />
+      </Cart>
     );
   }
 }

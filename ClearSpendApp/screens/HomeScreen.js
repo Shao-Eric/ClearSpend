@@ -13,8 +13,9 @@ import firebase from 'firebase';
 import { Constants } from 'expo';
 import { Searchbar } from 'react-native-paper';
 import ElevatedView from 'react-native-elevated-view'
-import { MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { MapView } from 'expo';
+import { CartContext } from '../context/CartContext';
 
 export default class HomeScreen extends React.Component {
 
@@ -41,17 +42,36 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={()=>this.props.navigation.navigate('SearchScreen')}
-        >
-          <View pointerEvents="none">
+        <StatusBar
+          animated
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <View elevation={3} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: STATUSBAR_HEIGHT + 12, marginHorizontal: 12 }}>
 
-            <Searchbar
-              style={{ marginTop: STATUSBAR_HEIGHT + 12, margin: 12 }}
-              placeholder="Search Clear Spend..."
-            />
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('SearchScreen')}
+            style={{ flex: 1 }}
+          >
+            <View pointerEvents="none">
+
+              <Searchbar
+                placeholder="Search ClearSpend..."
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{ position: 'absolute' }}
+            onPress={() => this.props.navigation.navigate('CartScreen')}
+          >
+            <CartContext.Consumer>
+              {cartContext =>
+                <MaterialCommunityIcons name={cartContext.listOfItems.length === 0 ? "cart-outline" : "cart"} size={26} color="#666666" style={{ padding: 12, marginLeft: 4 }} />
+              }
+            </CartContext.Consumer>
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={this.state.hospitals}
           renderItem={({ item }) =>
@@ -63,20 +83,21 @@ export default class HomeScreen extends React.Component {
                 style={{ flex: 1 }}
                 onPress={() =>
                   this.props.navigation.navigate('HospitalScreen', {
-                    hospital: item.id,
+                    hospitalId: item.id,
                     name: item.name,
-                    categories: ["category1", "category2", "category3", "category4"]
+                    categories: item.categories
                   })
                 }
               >
                 <View style={{ flex: 1, height: '100%', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
                   <View style={{ flex: 1, padding: 16 }}>
                     <Text style={{ fontSize: 20 }}>{item.name}</Text>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row', marginVertical: 6 }}>
                       {item.starArray}
                     </View>
-                    <Text>{item.address.split("New York")[0]}</Text>
-                    <Text>New York{item.address.split("New York")[1]}</Text>
+                    <Text style={{ fontSize: 14, marginVertical: 6 }}>{item.phone}</Text>
+                    <Text style={{ fontSize: 14 }}>{item.address1}</Text>
+                    <Text style={{ fontSize: 14 }}>{item.address2}</Text>
 
                   </View>
                   <View pointerEvents="none" style={{ flex: 1 }}>

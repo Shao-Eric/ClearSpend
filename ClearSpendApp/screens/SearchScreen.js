@@ -2,23 +2,36 @@ import React from 'react'
 import { View, StyleSheet, StatusBar, Platform, FlatList, Text, TouchableOpacity } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import { Constants } from 'expo';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import ElevatedView from 'react-native-elevated-view'
+import { CartContext } from '../context/CartContext';
+
 export default class SearchScreen extends React.Component {
     state = {
         data: [],
         firstQuery: ''
-    };
+    }
+
+
     componentDidMount() {
         console.disableYellowBox = true;
+        let searchQuery = { "query": this.state.firstQuery }
+        if ('params' in this.props.navigation.state && this.props.navigation.state.params) {
+            if ('hospitalId' in this.props.navigation.state.params) {
+                searchQuery['hospital'] = this.props.navigation.state.params.hospitalId
+            }
+            if ('category' in this.props.navigation.state.params) {
+                searchQuery['category'] = this.props.navigation.state.params.category
+            }
+        }
+
         fetch('https://clear-spend-231908.appspot.com/search', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                "query": this.state.firstQuery
-            })
+            body: JSON.stringify(searchQuery)
         }).then((response) =>
             response.json()
         ).then(data =>
@@ -26,33 +39,29 @@ export default class SearchScreen extends React.Component {
         )
     }
 
-    addCart = () => {
-        console.log('add cart')
-    }
-
-    onIconPress = () => {
-        console.log('Go back Button Pressed')
-    }
-
     onSubmitSearch = () => {
         this.setState({ data: [] })
+        let searchQuery = { "query": this.state.firstQuery }
+        if ('params' in this.props.navigation.state && this.props.navigation.state.params) {
+            if ('hospitalId' in this.props.navigation.state.params) {
+                searchQuery['hospital'] = this.props.navigation.state.params.hospitalId
+            }
+            if ('category' in this.props.navigation.state.params) {
+                searchQuery['category'] = this.props.navigation.state.params.category
+            }
+        }
         fetch('https://clear-spend-231908.appspot.com/search', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                "query": this.state.firstQuery
-            })
+            body: JSON.stringify(searchQuery)
         }).then((response) =>
             response.json()
         ).then(data => {
-            console.log(data)
             if (data.length > 0) {
                 this.setState({ data })
-            } else {
-                console.log('Mo match in database')
             }
         }
         )
@@ -60,20 +69,51 @@ export default class SearchScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Searchbar
-                    style={{ marginTop: STATUSBAR_HEIGHT + 12, margin: 12 }}
-                    placeholder="Search Clear Spend..."
-                    icon="arrow-back"
-                    onIconPress={() => this.props.navigation.goBack()}
-                    onChangeText={query => { this.setState({ firstQuery: query }); }}
-                    onSubmitEditing={(event) => this.onSubmitSearch()}
+                <StatusBar
+                    animated
+                    backgroundColor="transparent"
+                    barStyle="dark-content"
                 />
+                <View elevation={3} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: STATUSBAR_HEIGHT + 12, marginHorizontal: 12 }}>
+
+                    <TouchableOpacity
+                        style={{ flex: 1 }}
+                    >
+
+                        <Searchbar
+                            autoFocus
+                            placeholder="Search ClearSpend..."
+                            icon="arrow-back"
+                            onIconPress={() => this.props.navigation.goBack()}
+                            onChangeText={query => { this.setState({ firstQuery: query }); }}
+                            onSubmitEditing={(event) => this.onSubmitSearch()}
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={{ position: 'absolute' }}
+                        onPress={() => this.props.navigation.navigate('CartScreen')}
+                    >
+                        <CartContext.Consumer>
+                            {cartContext =>
+                                <MaterialCommunityIcons name={cartContext.listOfItems.length === 0 ? "cart-outline" : "cart"} size={26} color="#666666" style={{ padding: 12, marginLeft: 4 }} />
+                            }
+                        </CartContext.Consumer>
+                    </TouchableOpacity>
+                </View>
+
+                {this.props.navigation.state.params && ('name' in this.props.navigation.state.params) && <ElevatedView elevation={2} style={{ marginHorizontal: 20, borderRadius: 12, top: -12, backgroundColor: 'skyblue' }}>
+                    <Text style={{ textAlign: 'center', padding: 12, bottom: -2, fontSize: 16, color: 'white' }}>
+                        {this.props.navigation.state.params.name}{"\n"}
+                        {this.props.navigation.state.params.category}
+                    </Text>
+                </ElevatedView>}
 
                 <FlatList
-                    style={{ flex: 1, paddingBottom: 16, padding: 8 }}
+                    style={{ flex: 1, top: this.props.navigation.state.params && ('name' in this.props.navigation.state.params) ? -12 : 0, padding: 4 }}
                     removeClippedSubviews
                     data={this.state.data}
-                    ItemSeparatorComponent={()=><View style={{ height: 8}}></View>}
+                    ItemSeparatorComponent={() => <View style={{ height: 8 }}></View>}
                     renderItem={({ item }) => (
                         <View style={styles.cardStyle}>
                             <View style={styles.cardSectionStyle}>
@@ -86,8 +126,8 @@ export default class SearchScreen extends React.Component {
                                     </Text>
                                 </View>
                                 <View style={styles.headerContentStyle}>
-                                    <Text style={{ fontSize: 18, textAlign: 'center', width: 80 }}>
-                                        ${item.Price}
+                                    <Text style={{ fontSize: 14, textAlign: 'center', width: 80 }}>
+                                        ${item.Price.toFixed(2)}
                                     </Text>
                                 </View>
 
@@ -98,9 +138,18 @@ export default class SearchScreen extends React.Component {
 
                                     }}
                                 >
-                                    <TouchableOpacity onPress={this.addCart} style={styles.buttonStyle}>
-                                        <AntDesign name="pluscircleo" size={26} color="green" />
-                                    </TouchableOpacity>
+                                    <CartContext.Consumer>
+                                        {cartContext =>
+                                            <TouchableOpacity onPress={() => cartContext.addItem({
+                                                description: item.Description,
+                                                price: item.Price,
+                                                hospital: item.hospital,
+                                                date: new Date().getTime()
+                                            })} style={styles.buttonStyle}>
+                                                <AntDesign name="pluscircleo" size={26} color="green" />
+                                            </TouchableOpacity>
+                                        }
+                                    </CartContext.Consumer>
 
                                 </View>
                             </View>
